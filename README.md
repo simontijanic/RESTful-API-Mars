@@ -105,7 +105,7 @@ Skal bruke postman til å teste API-et. Node.js backend kjører på localhost po
 // Test: Validere AFK Epost
 POST http://localhost:3000/api/data
 {
-    "email": "test@akershus-fk.no",
+    "email": "test@afk.no",
     "date": "2024-03-18",
     "data": {"title": "Test"}
 }
@@ -125,7 +125,7 @@ POST http://localhost:3000/api/data
 // Test: Validere Datoinput
 POST http://localhost:3000/api/data
 {
-    "email": "test@akershus-fk.no",
+    "email": "test@afk.no",
     "date": "2024-13-45",  // Ugyldig dato
     "data": {"title": "Test"}
 }
@@ -138,7 +138,7 @@ POST http://localhost:3000/api/data
 // 1. Opprett data
 POST http://localhost:3000/api/data
 {
-    "email": "test@akershus-fk.no",
+    "email": "test@afk.no",
     "date": "2024-03-18",
     "data": {"title": "Test"}
 }
@@ -147,7 +147,7 @@ POST http://localhost:3000/api/data
 GET http://localhost:3000/api/data/date/2024-03-18
 
 // 3. Hent brukerdata
-GET http://localhost:3000/api/data/user/test@akershus-fk.no
+GET http://localhost:3000/api/data/user/test@afk.no
 ```
 
 ## Testing with Postman
