@@ -150,3 +150,75 @@ GET http://localhost:3000/api/data/date/2024-03-18
 GET http://localhost:3000/api/data/user/test@akershus-fk.no
 ```
 
+## Testing with Postman
+
+### Prerequisites
+- Node.js server running on port 3000
+- MongoDB running locally
+- Postman installed
+
+### Test Cases
+
+#### 1. Create Data (POST)
+```http
+POST http://localhost:3000/api/data
+
+Headers:
+Content-Type: application/json
+
+Body:
+{
+    "email": "test@afk.no",
+    "date": "2024-03-18",
+    "content": {"title": "Test", "description": "Any valid JSON works here"}
+}
+```
+
+Expected Response (201):
+```json
+{
+    "status": "success",
+    "data": {
+        "email": "test@afk.no",
+        "date": "2024-03-18T00:00:00.000Z",
+        "content": {
+            "title": "Test",
+            "description": "Any valid JSON works here"
+        }
+    }
+}
+```
+
+#### 2. Get Data by Date (GET)
+```http
+GET http://localhost:3000/api/data/date/2024-03-18
+```
+
+Expected Response (200):
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "email": "test@afk.no",
+            "date": "2024-03-18T00:00:00.000Z",
+            "content": {
+                "title": "Test",
+                "description": "Any valid JSON works here"
+            }
+        }
+    ]
+}
+```
+
+### Validation Rules
+- Email must end with @afk.no
+- Date must be in ISO format (YYYY-MM-DD)
+- Content must be valid JSON
+
+### Common Errors
+- 400: Invalid email format or domain
+- 400: Invalid date format
+- 400: Invalid JSON content
+- 500: Database or server error
+
