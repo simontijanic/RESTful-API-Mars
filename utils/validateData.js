@@ -1,5 +1,7 @@
 const { body } = require('express-validator');
 
+// Max size 1MB in bytes
+
 exports.validateData = [
     body('email')
         .trim()
@@ -17,6 +19,11 @@ exports.validateData = [
         .withMessage('Invalid date format'),
     body('content')
         .custom((value) => {
+            const contentSize = Buffer.byteLength(JSON.stringify(value));
+            if (contentSize > process.env.MAX_CONTENT_SIZE) {
+                throw new Error(`Content size exceeds maximum limit of ${process.env.MAX_CONTENT_SIZE / 1024 / 1024}MB`);
+            }
+            
             if (typeof value === 'object' && value !== null) {
                 return true;
             }
@@ -27,5 +34,5 @@ exports.validateData = [
                 throw new Error('Content must be valid JSON');
             }
         })
-        .withMessage('Content must be valid JSON')
+        .withMessage('Content validation failed')
 ];

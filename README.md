@@ -215,11 +215,13 @@ Expected Response (200):
 - Email must end with @afk.no
 - Date must be in ISO format (YYYY-MM-DD)
 - Content must be valid JSON
+- Content size must not exceed 1MB
 
 ### Common Errors
 - 400: Invalid email format or domain
 - 400: Invalid date format
 - 400: Invalid JSON content
+- 400: Content size exceeds 1MB limit
 - 500: Database or server error
 
 ## Express Validator Implementation
