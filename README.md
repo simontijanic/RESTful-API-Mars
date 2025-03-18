@@ -159,7 +159,7 @@ GET http://localhost:3000/api/data/user/test@afk.no
 
 ### Test Cases
 
-#### 1. Create Data (POST)
+#### 1. Lag Data (POST)
 ```http
 POST http://localhost:3000/api/data
 
@@ -189,7 +189,7 @@ Expected Response (201):
 }
 ```
 
-#### 2. Get Data by Date (GET)
+#### 2. Fetch Data med Date (GET)
 ```http
 GET http://localhost:3000/api/data/date/2024-03-18
 ```
@@ -221,4 +221,102 @@ Expected Response (200):
 - 400: Invalid date format
 - 400: Invalid JSON content
 - 500: Database or server error
+
+## Express Validator Implementation
+
+### Overview
+Express-validator er et middleware som validerer incoming requests før de reacher router handlersene dine. 
+
+### Hvordan det funker i mitt prosjekt
+
+1. Validation Chain in `utils/validateData.js`:
+```javascript
+// Email validation
+body('email')
+    .trim()                    // Remove whitespace
+    .isEmail()                 // Check if valid email format
+    .matches(/@afk\.no$/)     // Må ende med @afk.no
+
+// Date validation
+body('date')
+    .isISO8601()              // Must be YYYY-MM-DD format
+    .custom(value => {        // Custom validation
+        const date = new Date(value);
+        return !isNaN(date.getTime());
+    })
+
+// Content validation
+body('content')
+    .custom((value) => {      // Custom validation for JSON
+        if (typeof value === 'object') return true;
+        try {
+            JSON.parse(value);
+            return true;
+        } catch (e) {
+            throw new Error('Invalid JSON');
+        }
+    })
+```
+
+### Validation Flow
+1. Request treffer endpoint `/api/data`
+2. Express-validator middleware prosseserer denne requesten
+3. Hvert field er validert i følge de reglene jeg har satt opp 
+4. Resultetatene er da collecta
+5. Og i controlleren så sjekker den validations resultatene
+```javascript
+const errors = validationResult(req);
+if (!errors.isEmpty()) {
+    return res.status(400).json({
+        status: 'error',
+        errors: errors.array()
+    });
+}
+```
+
+### Testing i Postman (eller Thunderclient, men jeg brukte Postman)
+```http
+POST http://localhost:3000/api/data
+Content-Type: application/json
+
+// Valid Request
+{
+    "email": "test@afk.no",          // Must end with @afk.no
+    "date": "2024-03-18",            // Must be valid ISO date
+    "content": {"title": "Test"}      // Must be valid JSON
+}
+
+// Common Validation Errors:
+{
+    "email": "test@gmail.com",        // Wrong domain
+    "date": "2024-13-45",            // Invalid date
+    "content": "{broken json}"        // Invalid JSON
+}
+```
+
+### Validation Response Eksempler
+```json
+// Success (201)
+{
+    "status": "success",
+    "data": {
+        "email": "test@afk.no",
+        "date": "2024-03-18T00:00:00.000Z",
+        "content": {"title": "Test"}
+    }
+}
+
+// Validation Error (400)
+{
+    "status": "error",
+    "errors": [
+        {
+            "type": "field",
+            "msg": "Must be an AFK email address",
+            "path": "email",
+            "location": "body"
+        }
+    ]
+}
+```
 
