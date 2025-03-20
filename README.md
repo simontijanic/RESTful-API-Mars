@@ -1,4 +1,4 @@
-# Iterasjon-1-RESTful-API
+# RESTful-API-Mars
 
 ## TASK: Fysisk Systemarkitektur
 
@@ -36,17 +36,16 @@ sequenceDiagram
 
 
 ## TASK: Flytdiagram Software
-
 ```mermaid
 flowchart TD
-    A[API Endepunkt] --> B{Valider Request}
-    B -->|OK| C[Valider AFK Epost]
-    B -->|Feil| D[Return 400]
-    C -->|OK| E[Valider Dato]
-    C -->|Feil| D[Return 400]
-    E -->|OK| G[Lagre Data]
-    E -->|Feil| D[Return 400]
-    G --> I[Return 200]
+    A([Start]) --> B{Valider Request Format}
+    B -->|OK| C{Valider AFK Epost}
+    B -->|Feil| E[Return 400]
+    C -->|OK| D{Valider Dato Format}
+    C -->|Feil| E[Return 400]
+    D -->|OK| F[Lagre Data]
+    D -->|Feil| E[Return 400]
+    F --> G([Return 200])
 ```
 
 ### API Endpoints TASK: Funksjonell Beskrivelse
@@ -74,6 +73,7 @@ Retrieves all data entries for a specific user email.
 - Email must be valid @afk.no address
 - Returns array of user's entries
 - Returns empty array if no entries found
+
 
 ## TASK: Standard for Svar og Forespørsel
 
