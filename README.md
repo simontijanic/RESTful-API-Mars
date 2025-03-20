@@ -1,12 +1,11 @@
 # RESTful-API-Mars
 
 ## Table of Contents
-- [System Architecture](#system-architecture)
-- [API Documentation](#api-documentation)
+- [Common errors](#common-errors)
 - [Authentication & Authorization](#authentication--authorization)
-- [Testing Guide](#testing-guide)
+- [Testing Guide](#test-cases)
 - [Validation Rules](#validation-rules)
-- [Error Handling](#error-handling)
+- [Error Handling](#error-responses)
 
 
 ## TASK: Fysisk Systemarkitektur
