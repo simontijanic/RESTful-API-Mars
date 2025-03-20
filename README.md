@@ -43,9 +43,9 @@ flowchart TD
     B -->|OK| C[Valider AFK Epost]
     B -->|Feil| D[Return 400]
     C -->|OK| E[Valider Dato]
-    C -->|Feil| F[Return 401]
+    C -->|Feil| D[Return 400]
     E -->|OK| G[Lagre Data]
-    E -->|Feil| H[Return 400]
+    E -->|Feil| D[Return 400]
     G --> I[Return 200]
 ```
 
@@ -74,6 +74,32 @@ graph LR
     GET3 --> Success
     GET3 --> Error
 ```
+
+### API Endpoints
+
+#### POST /api/data
+Creates a new data entry in the system.
+- Requires valid @afk.no email
+- Validates date format
+- Accepts JSON content up to 1MB
+- Returns 201 on success with created data
+
+#### GET /api/data/:id 
+Retrieves a specific data entry by its ID.
+- Returns 200 with data if found
+- Returns 404 if not found
+
+#### GET /api/data/date/:date
+Retrieves all data entries for a specific date.
+- Date must be in YYYY-MM-DD format
+- Returns array of matching entries
+- Returns empty array if no entries found
+
+#### GET /api/data/user/:email
+Retrieves all data entries for a specific user email.
+- Email must be valid @afk.no address
+- Returns array of user's entries
+- Returns empty array if no entries found
 
 ## TASK: Standard for Svar og Forespørsel
 

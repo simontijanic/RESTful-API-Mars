@@ -13,6 +13,7 @@ exports.createData = async (req, res) => {
 
         const { email, date, content } = req.body;
         let parsedContent;
+        
         try {
             parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
         } catch (error) {
