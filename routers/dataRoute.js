@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
 const dataController = require('../controllers/dataController');
 const authController = require('../controllers/authController');
-const { validateData } = require('../utils/validateData');
-const { protect, restrictTo } = require('../middleware/auth');
 
-// Auth routes
+// Public routes
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 
-// Protecta data routes
-router.post('/data', protect, validateData, dataController.createData);
-router.get('/data/date/:date', protect, dataController.getDataByDate);
-router.get('/data/user/:email', protect, restrictTo('admin', 'superadmin'), dataController.getDataByEmail);
+// Protected routes
+router.use(auth.protect); // All routes below need authentication
+router.post('/data', dataController.createData);
+router.get('/data/:date', dataController.getDataByDate);
+
+// Admin only routes
+router.get('/user/:email', auth.requireRole('admin'), dataController.getDataByEmail);
 
 module.exports = router;
