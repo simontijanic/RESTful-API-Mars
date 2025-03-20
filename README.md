@@ -1,5 +1,14 @@
 # RESTful-API-Mars
 
+## Table of Contents
+- [System Architecture](#system-architecture)
+- [API Documentation](#api-documentation)
+- [Authentication & Authorization](#authentication--authorization)
+- [Testing Guide](#testing-guide)
+- [Validation Rules](#validation-rules)
+- [Error Handling](#error-handling)
+
+
 ## TASK: Fysisk Systemarkitektur
 
 ```mermaid
