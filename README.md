@@ -322,3 +322,122 @@ Content-Type: application/json
 }
 ```
 
+## Authentication & Authorization
+
+### User Roles
+The API implements three levels of authorization:
+- `superadmin`: Highest level of access
+- `admin`: Administrative access
+- `user`: Basic access
+
+### Authentication Flow
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as Auth Middleware
+    participant R as Route Handler
+    participant D as Database
+
+    C->>A: Request with JWT
+    A->>A: Verify Token
+    alt Invalid Token
+        A->>C: 401 Unauthorized
+    else Valid Token
+        A->>D: Find User
+        alt User Not Found
+            D->>A: No User
+            A->>C: 401 Unauthorized
+        else User Found
+            D->>A: User Data
+            A->>R: Next()
+            R->>C: Protected Resource
+        end
+    end
+```
+
+### API Endpoints for Auth
+
+#### Register New User
+```http
+POST /api/register
+Content-Type: application/json
+
+{
+    "email": "user@afk.no",
+    "password": "password123",
+    "password2": "password123"
+}
+```
+
+Response (201):
+```json
+{
+    "status": "success",
+    "token": "your.jwt.token"
+}
+```
+
+#### Login User
+```http
+POST /api/login
+Content-Type: application/json
+
+{
+    "email": "user@afk.no",
+    "password": "password123"
+}
+```
+
+Response (200):
+```json
+{
+    "status": "success",
+    "token": "your.jwt.token"
+}
+```
+
+### Protected Routes
+All data routes require authentication. Include the JWT token in the Authorization header:
+```http
+Authorization: Bearer your.jwt.token
+```
+
+#### Role-Based Access
+- `/api/data` (POST) - Requires authentication
+- `/api/data/date/:date` (GET) - Requires authentication
+- `/api/data/user/:email` (GET) - Requires admin or superadmin role
+
+### Error Responses
+
+#### Authentication Errors
+```json
+{
+    "status": "error",
+    "message": "Du er ikke logga inn"
+}
+```
+
+#### Authorization Errors
+```json
+{
+    "status": "error",
+    "message": "Du har ikke tilgang!"
+}
+```
+
+#### Invalid Token
+```json
+{
+    "status": "error",
+    "message": "Invalid token"
+}
+```
+
+### Security Features
+- JWT-based authentication
+- Password hashing with bcrypt
+- Role-based access control
+- Token expiration (24 hours)
+- Email domain validation (@afk.no)
+- Password confirmation on registration
+
