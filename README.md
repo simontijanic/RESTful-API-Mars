@@ -49,33 +49,7 @@ flowchart TD
     G --> I[Return 200]
 ```
 
-## TASK: Funksjonell Beskrivelse
-
-```mermaid
-graph LR
-    subgraph Endpoints
-        POST[POST /api/data]
-        GET1[GET /api/data/:id]
-        GET2[GET /api/data/date/:date]
-        GET3[GET /api/data/user/:email]
-    end
-
-    subgraph Responses
-        Success[200 OK]
-        Error[400/401/500]
-    end
-
-    POST --> Success
-    POST --> Error
-    GET1 --> Success
-    GET1 --> Error
-    GET2 --> Success
-    GET2 --> Error
-    GET3 --> Success
-    GET3 --> Error
-```
-
-### API Endpoints
+### API Endpoints TASK: Funksjonell Beskrivelse
 
 #### POST /api/data
 Creates a new data entry in the system.
