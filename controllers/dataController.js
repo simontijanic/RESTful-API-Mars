@@ -13,7 +13,7 @@ exports.createData = async (req, res) => {
 
         const { email, date, content } = req.body;
         let parsedContent;
-        
+
         try {
             parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
         } catch (error) {
@@ -59,3 +59,20 @@ exports.getDataByDate = async (req, res) => {
         });
     }
 };
+
+exports.getDataByEmail = async (req, res) => {
+    try {
+        const data = await Data.find({
+            email: req.params.email
+        });
+        res.json({
+            status: 'success',
+            data: data
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
+    }
+}
