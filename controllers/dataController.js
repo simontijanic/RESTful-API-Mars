@@ -1,14 +1,12 @@
 const { validationResult } = require('express-validator');
 const Data = require('../models/dataModel');
+const responseUtil = require('../utils/responseUtil');
 
 exports.createData = async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
-                status: 'error',
-                errors: errors.array()
-            });
+            return responseUtil.validation(res, errors);
         }
 
         const { email, date, content } = req.body;
@@ -17,10 +15,7 @@ exports.createData = async (req, res) => {
         try {
             parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
         } catch (error) {
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid JSON content'
-            });
+            return responseUtil.error(res, 'Invalid JSON content', 400);
         }
         
         const data = new Data({
@@ -30,16 +25,10 @@ exports.createData = async (req, res) => {
         });
         
         await data.save();
+        return responseUtil.success(res, data, 'Data created', 201);
 
-        res.status(201).json({
-            status: 'success',
-            data: data
-        });
     } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: error.message
-        });
+        return responseUtil.error(res, error.message);
     }
 };
 
@@ -48,15 +37,9 @@ exports.getDataByDate = async (req, res) => {
         const data = await Data.find({
             date: new Date(req.params.date)
         });
-        res.json({
-            status: 'success',
-            data: data
-        });
+        return responseUtil.success(res, data);
     } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: error.message
-        });
+        return responseUtil.error(res, error.message);
     }
 };
 
@@ -65,14 +48,8 @@ exports.getDataByEmail = async (req, res) => {
         const data = await Data.find({
             email: req.params.email
         });
-        res.json({
-            status: 'success',
-            data: data
-        });
+        return responseUtil.success(res, data);
     } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: error.message
-        });
+        return responseUtil.error(res, error.message);
     }
 }
